@@ -97,6 +97,15 @@
             </div>
           </div>
           <div id="analysisSummary" class="summary-strip">レビュー実行後に分析結果を表示します。</div>
+          <section class="error-prediction">
+            <div>
+              <p class="panel-label">Error Forecast</p>
+              <h3>エラー予測</h3>
+            </div>
+            <ul id="errorPredictionList" class="clean-list">
+              <li>レビュー実行後に、起きやすいエラーを予測して表示します。</li>
+            </ul>
+          </section>
           <div id="issuesList" class="issue-list"></div>
         </section>
 
@@ -144,8 +153,43 @@
               <span>総合スコア</span>
               <strong id="overallScore">--</strong>
             </section>
+            <section class="difficulty-panel">
+              <div>
+                <p class="panel-label">Difficulty</p>
+                <h3>AI難易度判定</h3>
+              </div>
+              <div class="difficulty-rating">
+                <strong id="difficultyStars">-----</strong>
+                <span id="difficultyLabel">レビュー後に表示</span>
+              </div>
+              <p id="difficultyReason" class="difficulty-reason">コードの構文や必要な考え方から判定します。</p>
+            </section>
             <section id="scoreBars" class="score-bars"></section>
           </div>
+
+          <section class="knowledge-panel">
+            <div>
+              <p class="panel-label">Required Knowledge</p>
+              <h3>必要知識</h3>
+            </div>
+            <ul id="requiredKnowledgeList" class="knowledge-list">
+              <li>レビュー後に表示します。</li>
+            </ul>
+          </section>
+
+          <section class="roadmap-panel">
+            <div>
+              <p class="panel-label">Learning Roadmap</p>
+              <h3>学習ロードマップ</h3>
+            </div>
+            <div class="roadmap-rating">
+              <strong id="roadmapStars">-----</strong>
+              <span>あなたが学ぶべき順番</span>
+            </div>
+            <ol id="learningRoadmapList" class="roadmap-list">
+              <li>レビュー後に表示します。</li>
+            </ol>
+          </section>
 
           <div class="three-column">
             <section>
@@ -174,6 +218,36 @@
           <div id="historyList" class="history-list"></div>
         </section>
       </section>
+
+      <aside class="chat-panel" aria-labelledby="chatTitle">
+        <header class="chat-header">
+          <div>
+            <p class="panel-label">Ask AI</p>
+            <h2 id="chatTitle">コード質問</h2>
+          </div>
+          <span id="chatContextBadge" class="context-badge">入力コード</span>
+        </header>
+
+        <div id="chatMessages" class="chat-messages" aria-live="polite">
+          <article class="chat-message assistant">
+            <p>表示中のコードについて質問できます。レビュー後は、指摘・改善コード・評価も含めて答えます。</p>
+          </article>
+        </div>
+
+        <div class="quick-prompts" aria-label="質問例">
+          <button type="button" data-chat-prompt="このコードで一番注意すべきバグはどこですか？">バグ確認</button>
+          <button type="button" data-chat-prompt="改善コードでは何が変わりましたか？">変更点</button>
+          <button type="button" data-chat-prompt="初心者向けにこの処理の流れを説明してください。">処理の流れ</button>
+        </div>
+
+        <form id="chatForm" class="chat-form">
+          <label class="field">
+            <span>質問</span>
+            <textarea id="chatInput" rows="3" placeholder="例: 3行目の条件はなぜ必要ですか？"></textarea>
+          </label>
+          <button id="chatSubmit" class="primary-button" type="submit">送信</button>
+        </form>
+      </aside>
     </main>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
