@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Code Review Studio</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">AI Workflow: Input -> Analysis -> Generation -> Evaluation</p>
+        <h1>AI Code Review Studio</h1>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-button" type="button" aria-label="テーマ切替" title="テーマ切替">◐</button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="sidebar">
+        <nav class="steps" aria-label="ワークフロー">
+          <button class="step is-active" data-step="input" type="button">
+            <span>01</span>
+            入力
+          </button>
+          <button class="step" data-step="analysis" type="button">
+            <span>02</span>
+            分析
+          </button>
+          <button class="step" data-step="generation" type="button">
+            <span>03</span>
+            生成
+          </button>
+          <button class="step" data-step="evaluation" type="button">
+            <span>04</span>
+            評価
+          </button>
+          <button class="step" data-step="history" type="button">
+            <span>05</span>
+            履歴
+          </button>
+        </nav>
+
+        <section class="status-panel" aria-live="polite">
+          <p class="panel-label">現在の状態</p>
+          <strong id="statusText">コードを入力してください</strong>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <section id="input" class="view is-active" aria-labelledby="inputTitle">
+          <div class="view-heading">
+            <div>
+              <p class="section-kicker">Step 1</p>
+              <h2 id="inputTitle">コード入力</h2>
+            </div>
+            <button id="loadSample" class="ghost-button" type="button">サンプル</button>
+          </div>
+
+          <form id="reviewForm" class="input-grid">
+            <label class="field">
+              <span>プログラミング言語</span>
+              <select id="language" required>
+                <option value="JavaScript">JavaScript</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+                <option value="C">C</option>
+                <option value="C++">C++</option>
+                <option value="PHP">PHP</option>
+                <option value="Ruby">Ruby</option>
+                <option value="Go">Go</option>
+                <option value="Other">その他</option>
+              </select>
+            </label>
+
+            <label class="field code-field">
+              <span>ソースコード</span>
+              <textarea id="codeInput" spellcheck="false" required placeholder="レビューしたいコードを貼り付けてください"></textarea>
+            </label>
+
+            <div class="form-footer">
+              <p id="inputMeta">0 行 / 0 文字</p>
+              <button id="submitButton" class="primary-button" type="submit">レビュー開始</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="analysis" class="view" aria-labelledby="analysisTitle">
+          <div class="view-heading">
+            <div>
+              <p class="section-kicker">Step 2</p>
+              <h2 id="analysisTitle">分析結果</h2>
+            </div>
+          </div>
+          <div id="analysisSummary" class="summary-strip">レビュー実行後に分析結果を表示します。</div>
+          <div id="issuesList" class="issue-list"></div>
+        </section>
+
+        <section id="generation" class="view" aria-labelledby="generationTitle">
+          <div class="view-heading">
+            <div>
+              <p class="section-kicker">Step 3</p>
+              <h2 id="generationTitle">改善コード</h2>
+            </div>
+          </div>
+
+          <div class="compare-grid">
+            <article class="code-panel">
+              <header>修正前</header>
+              <pre><code id="originalCode"></code></pre>
+            </article>
+            <article class="code-panel">
+              <header>改善版</header>
+              <pre><code id="improvedCode"></code></pre>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <section>
+              <h3>改善理由</h3>
+              <ul id="reasonList" class="clean-list"></ul>
+            </section>
+            <section>
+              <h3>修正ポイント</h3>
+              <div id="changeList" class="change-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="evaluation" class="view" aria-labelledby="evaluationTitle">
+          <div class="view-heading">
+            <div>
+              <p class="section-kicker">Step 4</p>
+              <h2 id="evaluationTitle">コード品質評価</h2>
+            </div>
+          </div>
+
+          <div class="score-layout">
+            <section class="overall-score">
+              <span>総合スコア</span>
+              <strong id="overallScore">--</strong>
+            </section>
+            <section id="scoreBars" class="score-bars"></section>
+          </div>
+
+          <div class="three-column">
+            <section>
+              <h3>良い点</h3>
+              <ul id="goodPoints" class="clean-list"></ul>
+            </section>
+            <section>
+              <h3>改善点</h3>
+              <ul id="improvementPoints" class="clean-list"></ul>
+            </section>
+            <section>
+              <h3>学習アドバイス</h3>
+              <ul id="learningAdvice" class="clean-list"></ul>
+            </section>
+          </div>
+        </section>
+
+        <section id="history" class="view" aria-labelledby="historyTitle">
+          <div class="view-heading">
+            <div>
+              <p class="section-kicker">Extension</p>
+              <h2 id="historyTitle">レビュー履歴</h2>
+            </div>
+            <button id="refreshHistory" class="ghost-button" type="button">更新</button>
+          </div>
+          <div id="historyList" class="history-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
